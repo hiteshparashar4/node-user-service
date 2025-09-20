@@ -1,9 +1,15 @@
-const buildContainer = require('../containers/container');
-const createUserRouter = require('../controller/userRouter');
+const buildContainer = require('./container');
+const createUserRouter = require('../controllers/userController/userRouter');
 const { retryWithBackoff } = require('../helpers/retryAuth');
 const express = require('express');
 
-const initBackgroundContainer = (app) => {
+const createProxyRouter = () => {
+  const router = express.Router();
+  router.all('*', (req, res) => res.status(503).json({ error: 'Service temporarily unavailable - database not ready' }));
+  return router;
+};
+
+const initContainer = (app) => {
   const proxyRouter = createProxyRouter();
   app.use('/users', proxyRouter);
 
@@ -24,10 +30,4 @@ const initBackgroundContainer = (app) => {
   })();
 };
 
-const createProxyRouter = () => {
-  const router = express.Router();
-  router.all('*', (req, res) => res.status(503).json({ error: 'Service temporarily unavailable - database not ready' }));
-  return router;
-};
-
-module.exports = { initBackgroundContainer };
+module.exports = { initContainer };

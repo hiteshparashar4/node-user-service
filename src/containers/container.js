@@ -1,9 +1,9 @@
 const { createContainer, asClass, asFunction, asValue } = require('awilix');
 const { Sequelize, DataTypes } = require('sequelize');
-const UserRepository = require('../repository/userRepository');
-const UserService = require('../service/userService');
-const UserController = require('../controller/userController');
-const createUserRouter = require('../controller/userRouter');
+const UserRepository = require('../repositories/userRepository');
+const UserService = require('../services/userService');
+const UserController = require('../controllers/userController/userController');
+const createUserRouter = require('../controllers/userController/userRouter');
 const defineUserModel = require('../models/user');
 
 const buildContainer = async () => {

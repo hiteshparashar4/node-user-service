@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/errorHandler');
-const { initBackgroundContainer } = require('./startup/initContainer');
+const { initContainer } = require('./containers/initContainer');
 
 const createApp = async () => {
   const app = express();
@@ -11,7 +11,7 @@ const createApp = async () => {
   app.locals.dbReady = false;
   app.locals.container = null;
 
-  initBackgroundContainer(app);
+  initContainer(app);
 
   app.get('/live', (req, res) => res.json({ status: 'alive' }));
   app.get('/', (req, res) => res.send(app.locals.dbReady ? 'App is up (DB ready)' : 'App is up (DB not ready)'));
