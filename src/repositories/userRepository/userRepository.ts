@@ -1,5 +1,6 @@
 import { ModelStatic } from "sequelize";
-import { User } from "@/models/user";
+import { User, UserAttributes } from "@/models/user";
+import { CreateUserPayload } from "@/types/defaults";
 
 export default class UserRepository {
   private UserModel: ModelStatic<User>;
@@ -8,31 +9,34 @@ export default class UserRepository {
     this.UserModel = userModel;
   }
 
-  async list() {
+  async list(): Promise<UserAttributes[]> {
     const rows = await this.UserModel.findAll({
       order: [["createdAt", "ASC"]],
     });
-    return rows.map((r) => r.get({ plain: true }) as unknown as User);
+    return rows.map((r) => r.toJSON() as UserAttributes);
   }
 
-  async getById(id: string) {
+  async getById(id: string): Promise<UserAttributes | null> {
     const row = await this.UserModel.findByPk(id);
-    return row ? (row.get({ plain: true }) as unknown as User) : null;
+    return row ? (row.toJSON() as UserAttributes) : null;
   }
 
-  async create(payload: { name: string; email: string }) {
+  async create(payload: CreateUserPayload): Promise<UserAttributes> {
     const created = await this.UserModel.create(payload as any);
-    return created.get({ plain: true }) as unknown as User;
+    return created.toJSON() as UserAttributes;
   }
 
-  async update(id: string, patch: Partial<User>) {
+  async update(
+    id: string,
+    patch: Partial<UserAttributes>
+  ): Promise<UserAttributes | null> {
     const row = await this.UserModel.findByPk(id);
     if (!row) return null;
     await row.update(patch);
-    return row.get({ plain: true }) as unknown as User;
+    return row.toJSON() as UserAttributes;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<boolean> {
     const deleted = await this.UserModel.destroy({ where: { id } });
     return deleted > 0;
   }

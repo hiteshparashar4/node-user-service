@@ -1,4 +1,10 @@
-import { Sequelize, DataTypes, Model, CreationOptional } from "sequelize";
+import {
+  Sequelize,
+  DataTypes,
+  Model,
+  CreationOptional,
+  Optional,
+} from "sequelize";
 
 export interface UserAttributes {
   id: string;
@@ -8,7 +14,14 @@ export interface UserAttributes {
   updatedAt?: Date;
 }
 
-export class User extends Model<UserAttributes> implements UserAttributes {
+export type UserCreationAttributes = Optional<
+  UserAttributes,
+  "id" | "createdAt" | "updatedAt"
+>;
+export class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
   declare id: CreationOptional<string>;
   declare name: string;
   declare email: string;
@@ -23,6 +36,7 @@ const defineUserModel = (sequelize: Sequelize): typeof User => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING(255),

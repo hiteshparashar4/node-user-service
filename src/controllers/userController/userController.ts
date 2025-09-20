@@ -1,5 +1,6 @@
-import UserService from "@/services/userService/userService";
 import { Request, Response, NextFunction } from "express";
+import UserService from "@/services/userService/userService";
+import { CreateUserPayload } from "@/types/defaults";
 
 export default class UserController {
   private userService: UserService;
@@ -8,7 +9,7 @@ export default class UserController {
     this.userService = userService;
   }
 
-  listUsers = async (req: Request, res: Response, next: NextFunction) => {
+  listUsers = async (_req: Request, res: Response, next: NextFunction) => {
     try {
       const users = await this.userService.listUsers();
       res.json(users);
@@ -29,7 +30,8 @@ export default class UserController {
 
   createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const created = await this.userService.createUser(req.body);
+      const payload: CreateUserPayload = req.body;
+      const created = await this.userService.createUser(payload);
       res.status(201).json(created);
     } catch (e) {
       next(e);
