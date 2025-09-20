@@ -6,30 +6,41 @@ module.exports = (env, argv) => {
   const isProd = mode === 'production';
 
   return {
+    target: 'node20',
     mode,
-    entry: path.resolve(__dirname, 'src', 'server.js'),
+    entry: path.resolve(__dirname, 'src', 'server.ts'),
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'server.cjs',
-      libraryTarget: 'commonjs2',
-      clean: true
+      libraryTarget: 'commonjs2'
     },
-    resolve: { extensions: ['.js', '.json'] },
+    resolve: {
+      extensions: ['.ts', '.js', '.json'],
+      alias: {
+        '@': path.resolve(__dirname, 'src')
+      }
+    },
     externalsPresets: { node: true },
     externals: [nodeExternals()],
     devtool: isProd ? 'source-map' : 'inline-source-map',
     module: {
       rules: [
         {
-          test: /\.js$/i,
-          use: [],
+          test: /\.ts$/i,
+          use: [
+            {
+              loader: 'ts-loader',
+              options: {
+                transpileOnly: false,
+                configFile: 'tsconfig.json'
+              }
+            }
+          ],
           exclude: /node_modules/
         }
       ]
     },
-    optimization: {
-      minimize: false
-    },
+    optimization: { minimize: false },
     node: { __dirname: false, __filename: false },
     performance: { hints: false }
   };

@@ -1,7 +1,9 @@
-require('dotenv').config();
-const { Sequelize } = require('sequelize');
-const { Umzug, SequelizeStorage } = require('umzug');
-const path = require('path');
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+import { Umzug, SequelizeStorage } from 'umzug';
+import path from 'path';
+
+dotenv.config();
 
 const runMigrations = async () => {
   const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {

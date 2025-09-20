@@ -1,17 +1,18 @@
-const buildContainer = require('./container');
-const createUserRouter = require('../controllers/userController/userRouter');
-const { retryWithBackoff } = require('../helpers/retryAuth');
-const express = require('express');
+import express from 'express';
+import buildContainer from './container';
+import createUserRouter from '@/controllers/userController/userRouter';
+import { retryWithBackoff } from '@/helpers/retryAuth';
+import { API_VERSION, API_PATH } from '@/constants/common'
 
 const createProxyRouter = () => {
   const router = express.Router();
-  router.all('*', (req, res) => res.status(503).json({ error: 'Service temporarily unavailable - database not ready' }));
+  router.all('*', (_req, res) => res.status(503).json({ error: 'Service temporarily unavailable - database not ready' }));
   return router;
 };
 
-const initContainer = (app) => {
+export const initContainer = (app: express.Express): void => {
   const proxyRouter = createProxyRouter();
-  app.use('/users/v1', proxyRouter);
+  app.use(`/${API_VERSION}/${API_PATH}`, proxyRouter);
 
   (async () => {
     const maxAttempts = parseInt(process.env.DB_FAIL_MAX_ATTEMPTS || '5', 10);
@@ -29,5 +30,3 @@ const initContainer = (app) => {
     }
   })();
 };
-
-module.exports = { initContainer };

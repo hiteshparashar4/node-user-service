@@ -1,17 +1,17 @@
-const { createContainer, asClass, asFunction, asValue } = require('awilix');
-const { Sequelize, DataTypes } = require('sequelize');
-const UserRepository = require('../repositories/userRepository');
-const UserService = require('../services/userService');
-const UserController = require('../controllers/userController/userController');
-const createUserRouter = require('../controllers/userController/userRouter');
-const defineUserModel = require('../models/user');
+import { createContainer, asClass, asFunction, asValue } from 'awilix';
+import { Sequelize, DataTypes } from 'sequelize';
+import UserRepository from '@/repositories/userRepository/userRepository';
+import UserService from '@/services/userService/userService';
+import UserController from '@/controllers/userController/userController';
+import createUserRouter from '@/controllers/userController/userRouter';
+import defineUserModel from '@/models/user';
 
 const buildContainer = async () => {
   const env = process.env.NODE_ENV || 'development';
   const isTest = env === 'test';
   const isProd = env === 'production';
 
-  let sequelize;
+  let sequelize: Sequelize;
   if (isTest) {
     sequelize = new Sequelize('sqlite::memory:', { logging: false });
   } else {
@@ -39,7 +39,7 @@ const buildContainer = async () => {
 
   await sequelize.authenticate();
 
-  const UserModel = defineUserModel(sequelize, DataTypes);
+  const UserModel = defineUserModel(sequelize);
 
   const container = createContainer();
   container.register({
@@ -48,10 +48,10 @@ const buildContainer = async () => {
     userRepository: asClass(UserRepository).singleton(),
     userService: asClass(UserService).singleton(),
     userController: asClass(UserController).singleton(),
-    userRouter: asFunction(({ userController }) => createUserRouter(userController)).singleton()
+    userRouter: asFunction(({ userController }: any) => createUserRouter(userController)).singleton()
   });
 
   return container;
 };
 
-module.exports = buildContainer;
+export default buildContainer;

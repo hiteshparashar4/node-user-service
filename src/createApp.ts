@@ -1,7 +1,7 @@
-const express = require('express');
-const morgan = require('morgan');
-const errorHandler = require('./middleware/errorHandler');
-const { initContainer } = require('./containers/initContainer');
+import express from 'express';
+import morgan from 'morgan';
+import errorHandler from '@/middleware/errorHandler';
+import { initContainer } from '@/containers/initContainer';
 
 const createApp = async () => {
   const app = express();
@@ -13,16 +13,16 @@ const createApp = async () => {
 
   initContainer(app);
 
-  app.get('/live', (req, res) => res.json({ status: 'alive' }));
-  app.get('/', (req, res) => res.send(app.locals.dbReady ? 'App is up (DB ready)' : 'App is up (DB not ready)'));
+  app.get('/live', (_req, res) => res.json({ status: 'alive' }));
+  app.get('/', (_req, res) => res.send(app.locals.dbReady ? 'App is up (DB ready)' : 'App is up (DB not ready)'));
 
-  app.get('/ready', async (req, res) => {
+  app.get('/ready', async (_req, res) => {
     if (!app.locals.dbReady) return res.status(503).json({ status: 'not_ready', detail: 'database not connected' });
     try {
-      const sequelize = app.locals.container.resolve('sequelize');
+      const sequelize = app.locals.container.resolve('sequelize') as any;
       await sequelize.query('SELECT 1');
       return res.json({ status: 'ready' });
-    } catch (err) {
+    } catch (err: any) {
       return res.status(503).json({ status: 'not_ready', detail: err.message });
     }
   });
@@ -31,4 +31,4 @@ const createApp = async () => {
   return app;
 };
 
-module.exports = createApp;
+export default createApp;
