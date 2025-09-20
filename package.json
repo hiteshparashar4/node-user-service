@@ -1,0 +1,28 @@
+{
+  "name": "node-di-option-cjs",
+  "version": "1.0.0",
+  "description": "CommonJS app split into modules; background DB init, webpack config (CJS), no TypeScript",
+  "main": "dist/server.cjs",
+  "scripts": {
+    "start": "node dist/server.cjs",
+    "dev": "nodemon src/server.js --watch src",
+    "build": "webpack --config webpack.config.cjs --mode production",
+    "migrate": "node dist/scripts/migrate.cjs"
+  },
+  "dependencies": {
+    "awilix": "^8.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.3.0",
+    "sequelize": "^6.32.1",
+    "source-map-support": "^0.5.21"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "umzug": "^3.1.1",
+    "webpack": "^5.86.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
