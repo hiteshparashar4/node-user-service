@@ -1,5 +1,5 @@
-import { ModelStatic } from 'sequelize';
-import { User } from '@/models/user';
+import { ModelStatic } from "sequelize";
+import { User } from "@/models/user";
 
 export default class UserRepository {
   private UserModel: ModelStatic<User>;
@@ -9,8 +9,10 @@ export default class UserRepository {
   }
 
   async list() {
-    const rows = await this.UserModel.findAll({ order: [['createdAt', 'ASC']] });
-    return rows.map(r => r.get({ plain: true }) as unknown as User);
+    const rows = await this.UserModel.findAll({
+      order: [["createdAt", "ASC"]],
+    });
+    return rows.map((r) => r.get({ plain: true }) as unknown as User);
   }
 
   async getById(id: string) {
@@ -18,7 +20,7 @@ export default class UserRepository {
     return row ? (row.get({ plain: true }) as unknown as User) : null;
   }
 
-  async create(payload: { name: string; email: string; }) {
+  async create(payload: { name: string; email: string }) {
     const created = await this.UserModel.create(payload as any);
     return created.get({ plain: true }) as unknown as User;
   }

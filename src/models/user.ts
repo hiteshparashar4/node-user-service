@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model, CreationOptional } from 'sequelize';
+import { Sequelize, DataTypes, Model, CreationOptional } from "sequelize";
 
 export interface UserAttributes {
   id: string;
@@ -33,10 +33,10 @@ const defineUserModel = (sequelize: Sequelize): typeof User => {
         allowNull: false,
         unique: true,
         validate: { isEmail: true },
-      }
+      },
     },
     {
-      tableName: 'users',
+      tableName: "users",
       sequelize,
       timestamps: true,
     }

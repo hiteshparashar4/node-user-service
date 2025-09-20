@@ -1,5 +1,5 @@
-import UserService from '@/services/userService/userService';
-import { Request, Response, NextFunction } from 'express';
+import UserService from "@/services/userService/userService";
+import { Request, Response, NextFunction } from "express";
 
 export default class UserController {
   private userService: UserService;
@@ -12,37 +12,50 @@ export default class UserController {
     try {
       const users = await this.userService.listUsers();
       res.json(users);
-    } catch (e) { next(e); }
+    } catch (e) {
+      next(e);
+    }
   };
 
   getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await this.userService.getUser(req.params.id);
-      if (!user) return res.status(404).json({ error: 'Not found' });
+      if (!user) return res.status(404).json({ error: "Not found" });
       res.json(user);
-    } catch (e) { next(e); }
+    } catch (e) {
+      next(e);
+    }
   };
 
   createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const created = await this.userService.createUser(req.body);
       res.status(201).json(created);
-    } catch (e) { next(e); }
+    } catch (e) {
+      next(e);
+    }
   };
 
   updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updated = await this.userService.updateUser(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: 'Not found' });
+      const updated = await this.userService.updateUser(
+        req.params.id,
+        req.body
+      );
+      if (!updated) return res.status(404).json({ error: "Not found" });
       res.json(updated);
-    } catch (e) { next(e); }
+    } catch (e) {
+      next(e);
+    }
   };
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const ok = await this.userService.deleteUser(req.params.id);
-      if (!ok) return res.status(404).json({ error: 'Not found' });
+      if (!ok) return res.status(404).json({ error: "Not found" });
       res.status(204).send();
-    } catch (e) { next(e); }
+    } catch (e) {
+      next(e);
+    }
   };
 }
