@@ -11,7 +11,7 @@ const createProxyRouter = () => {
 
 const initContainer = (app) => {
   const proxyRouter = createProxyRouter();
-  app.use('/users', proxyRouter);
+  app.use('/users/v1', proxyRouter);
 
   (async () => {
     const maxAttempts = parseInt(process.env.DB_FAIL_MAX_ATTEMPTS || '5', 10);

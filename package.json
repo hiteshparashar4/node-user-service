@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.cjs",
     "dev": "nodemon src/server.js --watch src",
-    "build": "webpack --config webpack.config.cjs --mode production",
+    "build": "webpack --config webpack.config.js --mode production",
     "migrate": "node dist/scripts/migrate.cjs"
   },
   "dependencies": {
