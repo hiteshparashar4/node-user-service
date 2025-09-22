@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import morgan from "morgan";
 import errorHandler from "@/middleware/errorHandler";
 import { initContainer } from "@/containers/initContainer";
+import { Sequelize } from "sequelize";
 
 const healthStatus = async (app: Express, res: Response): Promise<Response> => {
   if (!app.locals.dbReady) {
@@ -10,7 +11,7 @@ const healthStatus = async (app: Express, res: Response): Promise<Response> => {
       .json({ status: "not_ready", detail: "database not connected" });
   }
   try {
-    const sequelize = app.locals.container.resolve("sequelize") as any;
+    const sequelize: Sequelize = app.locals.container.resolve("sequelize");
     await sequelize.query("SELECT 1");
     return res.json({ status: "App up and DB ready" });
   } catch (err: any) {
